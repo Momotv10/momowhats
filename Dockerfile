@@ -1,5 +1,5 @@
 # استخدام إصدار Node.js المناسب مع Puppeteer
-FROM node:16-bullseye-slim
+FROM node:18-bullseye-slim
 
 # تحديد مجلد العمل
 WORKDIR /app

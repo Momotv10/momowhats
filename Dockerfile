@@ -1,10 +1,10 @@
-# استخدام إصدار Node.js الكامل
+# استخدام إصدار Node.js المناسب مع Puppeteer
 FROM node:16-bullseye-slim
 
 # تحديد مجلد العمل
 WORKDIR /app
 
-# تثبيت التحديثات وأدوات النظام الأساسية أولاً
+# تثبيت الأدوات اللازمة لـ Chromium
 RUN apt-get update && apt-get install -y \
     chromium \
     ca-certificates \
@@ -24,21 +24,16 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# تعيين المتغيرات البيئية
+# تحديد مسار Chromium لمنع Puppeteer من تنزيل إصدار جديد
 ENV PUPPETEER_SKIP_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-# نسخ ملفات الحزمة أولاً للاستفادة من طبقات Docker
+# نسخ ملفات التهيئة وتثبيت الحزم
 COPY package.json package-lock.json ./
-
-# تثبيت التبعيات - تأكد من أن npm موجود
 RUN npm install --legacy-peer-deps
 
-# نسخ باقي الملفات
+# نسخ باقي الملفات إلى الحاوية
 COPY . .
-
-# فتح البورت الافتراضي
-EXPOSE 3000
 
 # تشغيل التطبيق
 CMD ["npm", "start"]
